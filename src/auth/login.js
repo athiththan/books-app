@@ -33,15 +33,23 @@ const Login =(props) =>
         }),
         onSubmit: (data) =>{
            console.log(data);
-           toast.success("Success Notification !");
+           
            axios.post('http://localhost:8080/api/login',data)
             .then(res=> {
-                localStorage.setItem('auth',JSON.stringify(res.data.UserToken));
+                console.log(res)
+                
+                if(res.data.statusCode==200){
+                 localStorage.setItem('auth',JSON.stringify(res.data.UserToken));
+                 toast.success("Success Notification !");
                 props.history.push('./user');
+                }
+                else{
+                    alert("EmailId or Password Wrong")
+                }
             })
-            .catch(err => {
-                toast.error(err.response.data);
-            })
+           // .catch(err => {
+            //    toast.error(err.response.data);
+          //  })
         }
 
 
@@ -66,7 +74,7 @@ const Login =(props) =>
                     </div>
                     <div className='form-group'>
                         <label>password:</label>
-                        <input name='password' className='form-control' type='password' 
+                        <input name='password' className='form-control' type='text' 
                         onChange={formik.handleChange} 
                         value= {formik.values.password}
                         />
