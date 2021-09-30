@@ -11,12 +11,12 @@ class User extends React.Component
     super();
     this.state = {
       data:[]
-      
     }
   }
    create = data =>
         {
-         axios.post("http://localhost:8080/Api/addbooks",data).then(res => {
+          const token = JSON.parse(localStorage.getItem('auth'));
+         axios.post("http://localhost:8080/Api/addbooks",data,{ headers: {"auth" : token}}).then(res => {
            console.log(res);
            this.getAll()
          })
@@ -27,8 +27,8 @@ class User extends React.Component
   }
   getAll()
   {
-    axios.get("http://localhost:8080/api/getAll").then(res => {
-      console.log(res.data);
+    const token = JSON.parse(localStorage.getItem('auth'));
+    axios.get("http://localhost:8080/api/getAll",{ headers: {"auth" : token}}).then(res => {
       this.setState({
         data:res.data
       })
@@ -40,14 +40,15 @@ class User extends React.Component
    {
     var option = window.confirm('Are You Sure Want to Delete')
     if(option){
-      axios.delete(`http://localhost:8080/api/delete/${data.id}`).then(res => {
+      const token = JSON.parse(localStorage.getItem('auth'));
+         
+      axios.delete(`http://localhost:8080/api/delete/${data.id}`,{ headers: {"auth" : token}}).then(res => {
       console.log(res);
       this.getAll()
         
       })
     }
   }
-  
   
   render()
   {
@@ -58,7 +59,7 @@ class User extends React.Component
            <InfoForm myData ={this.create}/>
          
          
-        <InfoTable getData = {this.state.data} delete={this.delete}  setData={this.update}/>
+        <InfoTable getData = {this.state.data} delete={this.delete}/>
       
     </div>
     </div>
